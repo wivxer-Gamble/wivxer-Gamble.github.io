@@ -31,27 +31,46 @@
       cursor: pointer;
     }
 
+    #wheelContainer {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin: 40px auto;
+    }
+
     #wheel {
-      width: 200px;
-      height: 200px;
-      margin: 30px auto;
-      border: 10px solid #ffffff;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
-      background-color: #444;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: bold;
-      color: white;
+      border: 6px solid #fff;
+      background: conic-gradient(
+        green 36deg,
+        red 36deg 360deg
+      );
+      transition: transform 2s ease-out;
+    }
+
+    #indicator {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; 
+      height: 0; 
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 20px solid yellow;
     }
   </style>
 </head>
 <body>
   <h1>🎯 Spin the Daily Role Wheel</h1>
-  <p>Enter your Discord username (or <b>77190</b> to test):</p>
+  <p>Enter your Discord username (only <b>admin tester</b> can use code <code>77190</code>):</p>
   <input type="text" id="discordUser" placeholder="Discord Username">
-  <div id="wheel">SPIN</div>
+  <div id="wheelContainer">
+    <div id="indicator"></div>
+    <div id="wheel"></div>
+  </div>
   <button onclick="spin()">Spin</button>
 
   <script>
@@ -64,11 +83,21 @@
         return;
       }
 
-      const isTester = user === "77190";
+      const isAdminTester = user === "77190";
+
+      // Prevent public users from using test mode
+      if (user === "77190") {
+        const allowed = prompt("🔐 Admin code required to test. Enter code:");
+        if (allowed !== "admin123") {
+          alert("❌ Access denied.");
+          return;
+        }
+      }
+
       const key = "lastSpin_" + user;
       const now = Date.now();
 
-      if (!isTester) {
+      if (!isAdminTester) {
         const lastSpin = localStorage.getItem(key);
         if (lastSpin && now - parseInt(lastSpin) < 86400000) {
           alert("❌ You already spun today. Try again tomorrow!");
@@ -77,26 +106,24 @@
         localStorage.setItem(key, now.toString());
       }
 
-      const wheel = document.getElementById("wheel");
-      const randomRotation = Math.floor(Math.random() * 360 + 720);
-      wheel.style.transition = "transform 2s ease-out";
-      wheel.style.transform = `rotate(${randomRotation}deg)`;
-
       const won = Math.random() < 0.1;
+      const angle = Math.floor(Math.random() * 360 + 720);
+      const wheel = document.getElementById("wheel");
+      wheel.style.transform = `rotate(${angle}deg)`;
 
       setTimeout(() => {
         if (won) {
-          alert(`🎉 Congrats ${user}! You won the role! Redeem it on Discord.`);
+          alert(`🎉 Congrats ${user}! You landed in the green and won the role!`);
           sendWebhook(user);
         } else {
-          alert("😢 No luck today. Try again tomorrow!");
+          alert("😢 You landed in the red. Try again tomorrow!");
         }
       }, 2000);
     }
 
     function sendWebhook(username) {
       const payload = {
-        content: `🎯 **${username}** just won the daily role spin! Tell them to redeem it.`,
+        content: `🎯 **${username}** just WON the daily spin! Let them redeem their role.`,
         username: "WheelBot"
       };
 
