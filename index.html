@@ -8,43 +8,50 @@
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 50px;
-      background: #1a1a1a;
-      color: #fff;
+      background: #121212;
+      color: #ffffff;
     }
+
     input, button {
-      padding: 15px;
+      padding: 12px 20px;
       font-size: 16px;
       margin: 10px;
       border-radius: 6px;
     }
+
     input {
       width: 250px;
       border: 1px solid #ccc;
     }
+
     button {
       background: #28a745;
       color: white;
       border: none;
       cursor: pointer;
     }
+
     #wheel {
       width: 200px;
       height: 200px;
-      margin: 40px auto;
-      border: 10px solid #fff;
+      margin: 30px auto;
+      border: 10px solid #ffffff;
       border-radius: 50%;
-      background: conic-gradient(
-        green 10%, 
-        red 90%
-      );
+      background-color: #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
     }
   </style>
 </head>
 <body>
   <h1>🎯 Spin the Daily Role Wheel</h1>
-  <p>Enter your Discord username (e.g., `user#1234`) to spin:</p>
+  <p>Enter your Discord username (or <b>77190</b> to test):</p>
   <input type="text" id="discordUser" placeholder="Discord Username">
-  <div id="wheel"></div>
+  <div id="wheel">SPIN</div>
   <button onclick="spin()">Spin</button>
 
   <script>
@@ -52,28 +59,30 @@
 
     function spin() {
       const user = document.getElementById("discordUser").value.trim();
-      if (!user || !user.includes("#") || user.length < 5) {
-        alert("❗ Please enter a valid Discord username (e.g., user#1234).");
+      if (!user) {
+        alert("❗ Please enter a valid Discord username.");
         return;
       }
 
-      const lastSpinKey = "lastSpin_" + user;
-      const lastSpin = localStorage.getItem(lastSpinKey);
+      const isTester = user === "77190";
+      const key = "lastSpin_" + user;
       const now = Date.now();
 
-      if (lastSpin && now - parseInt(lastSpin) < 86400000) {
-        alert("❌ You already spun today. Try again tomorrow!");
-        return;
+      if (!isTester) {
+        const lastSpin = localStorage.getItem(key);
+        if (lastSpin && now - parseInt(lastSpin) < 86400000) {
+          alert("❌ You already spun today. Try again tomorrow!");
+          return;
+        }
+        localStorage.setItem(key, now.toString());
       }
 
-      localStorage.setItem(lastSpinKey, now.toString());
+      const wheel = document.getElementById("wheel");
+      const randomRotation = Math.floor(Math.random() * 360 + 720);
+      wheel.style.transition = "transform 2s ease-out";
+      wheel.style.transform = `rotate(${randomRotation}deg)`;
 
       const won = Math.random() < 0.1;
-
-      const wheel = document.getElementById("wheel");
-      wheel.style.transition = "transform 2s ease-out";
-      const angle = Math.floor(Math.random() * 360 + 720);
-      wheel.style.transform = `rotate(${angle}deg)`;
 
       setTimeout(() => {
         if (won) {
@@ -93,9 +102,7 @@
 
       fetch(webhookURL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       }).catch(err => console.error("Webhook failed", err));
     }
