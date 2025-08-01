@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Role Wheel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    input, button {
+      padding: 15px;
+      font-size: 16px;
+      margin: 10px;
+      border-radius: 6px;
+    }
+    input {
+      width: 250px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #wheel {
+      width: 200px;
+      height: 200px;
+      margin: 40px auto;
+      border: 10px solid #fff;
+      border-radius: 50%;
+      background: conic-gradient(
+        green 10%, 
+        red 90%
+      );
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Spin the Daily Role Wheel</h1>
+  <p>Enter your Discord username (e.g., `user#1234`) to spin:</p>
+  <input type="text" id="discordUser" placeholder="Discord Username">
+  <div id="wheel"></div>
+  <button onclick="spin()">Spin</button>
+
+  <script>
+    const webhookURL = "https://discord.com/api/webhooks/1400912238591869058/9yiWBlL47_UqFgxSrG1qZWMCq-_C7GGficCbEXRg8qAzsAMJ-bKKKX6nN1jWe1u02iiW";
+
+    function spin() {
+      const user = document.getElementById("discordUser").value.trim();
+      if (!user || !user.includes("#") || user.length < 5) {
+        alert("❗ Please enter a valid Discord username (e.g., user#1234).");
+        return;
+      }
+
+      const lastSpinKey = "lastSpin_" + user;
+      const lastSpin = localStorage.getItem(lastSpinKey);
+      const now = Date.now();
+
+      if (lastSpin && now - parseInt(lastSpin) < 86400000) {
+        alert("❌ You already spun today. Try again tomorrow!");
+        return;
+      }
+
+      localStorage.setItem(lastSpinKey, now.toString());
+
+      const won = Math.random() < 0.1;
+
+      const wheel = document.getElementById("wheel");
+      wheel.style.transition = "transform 2s ease-out";
+      const angle = Math.floor(Math.random() * 360 + 720);
+      wheel.style.transform = `rotate(${angle}deg)`;
+
+      setTimeout(() => {
+        if (won) {
+          alert(`🎉 Congrats ${user}! You won the role! Redeem it on Discord.`);
+          sendWebhook(user);
+        } else {
+          alert("😢 No luck today. Try again tomorrow!");
+        }
+      }, 2000);
+    }
+
+    function sendWebhook(username) {
+      const payload = {
+        content: `🎯 **${username}** just won the daily role spin! Tell them to redeem it.`,
+        username: "WheelBot"
+      };
+
+      fetch(webhookURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error("Webhook failed", err));
+    }
+  </script>
+</body>
+</html>
