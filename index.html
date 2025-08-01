@@ -1,138 +1,658 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Daily Role Wheel</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 50px;
-      background: #121212;
-      color: #ffffff;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Grayscale Wheel of Luck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --platinum: #cfdbd5;
+    --alabaster: #e8eddf;
+    --saffron: #f5cb5c;
+    --eerie-black: #242423;
+    --jet: #333533;
+    --black: #000000;
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
 
-    input, button {
-      padding: 12px 20px;
-      font-size: 16px;
-      margin: 10px;
-      border-radius: 6px;
-    }
+  * {
+    box-sizing: border-box;
+  }
 
-    input {
-      width: 250px;
-      border: 1px solid #ccc;
-    }
+  body {
+    background-color: var(--eerie-black);
+    color: var(--alabaster);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
 
-    button {
-      background: #28a745;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+  #container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1200px;
+    padding: 2rem;
+    margin: 0 auto;
+  }
 
+  /* Left side: inputs & wheel */
+  #leftSide {
+    flex: 1;
+    min-width: 300px;
+    max-width: 450px;
+    text-align: center;
+    background: rgba(45, 45, 43, 0.7);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(207, 219, 213, 0.1);
+  }
+
+  h1 {
+    color: var(--saffron);
+    margin-top: 0;
+    font-weight: 600;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  p {
+    margin-bottom: 1.5rem;
+    color: var(--platinum);
+  }
+
+  input, button {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    width: 100%;
+    transition: var(--transition);
+  }
+
+  input {
+    background-color: var(--platinum);
+    color: var(--eerie-black);
+    border: 2px solid transparent;
+  }
+
+  input:focus {
+    border-color: var(--saffron);
+    box-shadow: 0 0 0 3px rgba(245, 203, 92, 0.3);
+  }
+
+  button {
+    background-color: var(--jet);
+    color: var(--alabaster);
+    cursor: pointer;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-top: 1rem;
+    transition: var(--transition);
+  }
+
+  button:hover {
+    background-color: var(--saffron);
+    color: var(--eerie-black);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(245, 203, 92, 0.3);
+  }
+
+  button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  #wheelContainer {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 2rem auto;
+  }
+
+  #indicator {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    color: var(--saffron);
+    user-select: none;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+  }
+
+  #wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(
+      var(--jet) 0deg 171deg,
+      var(--saffron) 171deg 189deg,
+      var(--jet) 189deg 360deg
+    );
+    border: 8px solid var(--platinum);
+    transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  #winEffect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 0 0 transparent;
+    transition: box-shadow 0.5s ease;
+    opacity: 0.7;
+  }
+
+  #winEffect.glow {
+    box-shadow: 0 0 50px 15px var(--saffron);
+    animation: pulse 1.5s infinite alternate;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 30px 5px var(--saffron);
+    }
+    100% {
+      box-shadow: 0 0 60px 20px var(--saffron);
+    }
+  }
+
+  /* Right side: stats and countdown */
+  #rightSide {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .counter {
+    background-color: var(--jet);
+    border-radius: 12px;
+    padding: 1.5rem;
+    user-select: none;
+    color: var(--alabaster);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+  }
+
+  .counter:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .counter strong {
+    font-size: 2.2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--saffron);
+    font-weight: 600;
+  }
+
+  #countdown {
+    background-color: var(--jet);
+    border-radius: 12px;
+    padding: 1.5rem;
+    font-family: 'Inter', monospace;
+    font-size: 1.2rem;
+    user-select: none;
+    color: var(--alabaster);
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+  }
+
+  #countdown:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  #timer {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--saffron);
+    margin-top: 0.5rem;
+    display: inline-block;
+  }
+
+  footer {
+    margin-top: 3rem;
+    text-align: center;
+    color: var(--platinum);
+    font-size: 0.9rem;
+    opacity: 0.7;
+    padding: 1rem;
+    width: 100%;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    #container {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    #leftSide, #rightSide {
+      max-width: 100%;
+    }
+    
     #wheelContainer {
-      position: relative;
-      width: 220px;
-      height: 220px;
-      margin: 40px auto;
+      width: 250px;
+      height: 250px;
     }
+  }
 
-    #wheel {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 6px solid #fff;
-      background: conic-gradient(
-        green 36deg,
-        red 36deg 360deg
-      );
-      transition: transform 2s ease-out;
-    }
+  /* Custom alert styling */
+  .custom-alert {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--jet);
+    color: var(--alabaster);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    max-width: 90%;
+    width: 400px;
+    text-align: center;
+    border-left: 5px solid var(--saffron);
+  }
 
-    #indicator {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0; 
-      height: 0; 
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-bottom: 20px solid yellow;
-    }
-  </style>
+  .custom-alert h2 {
+    margin-top: 0;
+    color: var(--saffron);
+  }
+
+  .custom-alert button {
+    margin-top: 1.5rem;
+    width: auto;
+    padding: 0.6rem 1.5rem;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+  }
+
+  /* Custom prompt styling */
+  .custom-prompt {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--jet);
+    color: var(--alabaster);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    max-width: 90%;
+    width: 400px;
+    text-align: center;
+    border-left: 5px solid var(--saffron);
+  }
+
+  .custom-prompt input {
+    margin: 1rem 0;
+  }
+
+  .custom-prompt-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .custom-prompt-buttons button {
+    flex: 1;
+  }
+</style>
 </head>
 <body>
-  <h1>🎯 Spin the Daily Role Wheel</h1>
-  <p>Enter your Discord username (only <b>admin tester</b> can use code <code>77190</code>):</p>
-  <input type="text" id="discordUser" placeholder="Discord Username">
-  <div id="wheelContainer">
-    <div id="indicator"></div>
-    <div id="wheel"></div>
+
+<div id="container">
+  <div id="leftSide">
+    <h1>🎰 Grayscale Wheel of Luck</h1>
+    <p>Enter your Discord username (admin test: <code>77190</code>):</p>
+    <input type="text" id="discordUser" placeholder="Discord Username" autocomplete="off" />
+    <button id="spinBtn">Spin the Wheel</button>
+    <div id="wheelContainer">
+      <div id="indicator">▼</div>
+      <div id="wheel">
+        <div id="winEffect"></div>
+      </div>
+    </div>
   </div>
-  <button onclick="spin()">Spin</button>
 
-  <script>
-    const webhookURL = "https://discord.com/api/webhooks/1400912238591869058/9yiWBlL47_UqFgxSrG1qZWMCq-_C7GGficCbEXRg8qAzsAMJ-bKKKX6nN1jWe1u02iiW";
+  <div id="rightSide">
+    <div class="counter">
+      <strong id="winCount">0</strong>
+      Total Wins
+    </div>
+    <div class="counter">
+      <strong id="lossCount">0</strong>
+      Total Losses
+    </div>
+    <div id="countdown">
+      Next spin available in:<br />
+      <span id="timer">--:--:--</span>
+    </div>
+  </div>
+</div>
 
-    function spin() {
-      const user = document.getElementById("discordUser").value.trim();
-      if (!user) {
-        alert("❗ Please enter a valid Discord username.");
+<footer>
+  &copy; 2025 Grayscale Gamble Club | All rights reserved
+</footer>
+
+<!-- Custom Alert -->
+<div class="overlay" id="overlay"></div>
+<div class="custom-alert" id="customAlert">
+  <h2 id="alertTitle">Alert</h2>
+  <p id="alertMessage">Message goes here</p>
+  <button id="alertButton">OK</button>
+</div>
+
+<!-- Custom Prompt -->
+<div class="custom-prompt" id="customPrompt">
+  <h2 id="promptTitle">Admin Access</h2>
+  <p id="promptMessage">Please enter the admin code:</p>
+  <input type="password" id="promptInput" placeholder="Enter code">
+  <div class="custom-prompt-buttons">
+    <button id="promptConfirm">Confirm</button>
+    <button id="promptCancel">Cancel</button>
+  </div>
+</div>
+
+<script>
+  const webhookURL = "https://discord.com/api/webhooks/1400912238591869058/9yiWBlL47_UqFgxSrG1qZWMCq-_C7GGficCbEXRg8qAzsAMJ-bKKKX6nN1jWe1u02iiW";
+
+  // Get DOM elements
+  const wheel = document.getElementById("wheel");
+  const glow = document.getElementById("winEffect");
+  const userInput = document.getElementById("discordUser");
+  const spinBtn = document.getElementById("spinBtn");
+  const winCountElem = document.getElementById("winCount");
+  const lossCountElem = document.getElementById("lossCount");
+  const timerElem = document.getElementById("timer");
+  const overlay = document.getElementById("overlay");
+  const customAlert = document.getElementById("customAlert");
+  const alertTitle = document.getElementById("alertTitle");
+  const alertMessage = document.getElementById("alertMessage");
+  const alertButton = document.getElementById("alertButton");
+  const customPrompt = document.getElementById("customPrompt");
+  const promptTitle = document.getElementById("promptTitle");
+  const promptMessage = document.getElementById("promptMessage");
+  const promptInput = document.getElementById("promptInput");
+  const promptConfirm = document.getElementById("promptConfirm");
+  const promptCancel = document.getElementById("promptCancel");
+
+  // Custom alert function
+  function showAlert(title, message) {
+    alertTitle.textContent = title;
+    alertMessage.textContent = message;
+    customAlert.style.display = 'block';
+    overlay.style.display = 'block';
+  }
+
+  // Custom prompt function
+  function showPrompt(title, message) {
+    return new Promise((resolve) => {
+      promptTitle.textContent = title;
+      promptMessage.textContent = message;
+      promptInput.value = '';
+      customPrompt.style.display = 'block';
+      overlay.style.display = 'block';
+      
+      const cleanup = () => {
+        customPrompt.style.display = 'none';
+        overlay.style.display = 'none';
+        promptConfirm.onclick = null;
+        promptCancel.onclick = null;
+      };
+      
+      promptConfirm.onclick = () => {
+        cleanup();
+        resolve(promptInput.value);
+      };
+      
+      promptCancel.onclick = () => {
+        cleanup();
+        resolve(null);
+      };
+    });
+  }
+
+  // Close alert
+  alertButton.addEventListener('click', () => {
+    customAlert.style.display = 'none';
+    overlay.style.display = 'none';
+  });
+
+  // Counters stored in localStorage
+  let wins = parseInt(localStorage.getItem("winCount")) || 0;
+  let losses = parseInt(localStorage.getItem("lossCount")) || 0;
+  winCountElem.textContent = wins;
+  lossCountElem.textContent = losses;
+
+  // Get unique device key for cooldown
+  function getDeviceKey() {
+    return btoa(navigator.userAgent + screen.width + screen.height + screen.colorDepth);
+  }
+
+  // Format time as HH:MM:SS
+  function formatTime(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hrs = Math.floor(totalSeconds / 3600).toString().padStart(2,"0");
+    const mins = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2,"0");
+    const secs = (totalSeconds % 60).toString().padStart(2,"0");
+    return `${hrs}:${mins}:${secs}`;
+  }
+
+  // Update countdown timer
+  function updateTimer() {
+    const cooldownKey = `dailySpin_${getDeviceKey()}`;
+    const lastSpin = localStorage.getItem(cooldownKey);
+    const now = Date.now();
+    let diff = 86400000; // 24 hours
+
+    if (lastSpin) {
+      const elapsed = now - parseInt(lastSpin);
+      if (elapsed < 86400000) {
+        diff = 86400000 - elapsed;
+      } else {
+        diff = 0;
+      }
+    } else {
+      diff = 0;
+    }
+
+    if (diff === 0) {
+      timerElem.textContent = "Ready to spin!";
+      spinBtn.disabled = false;
+    } else {
+      timerElem.textContent = formatTime(diff);
+      spinBtn.disabled = true;
+    }
+  }
+
+  // Run timer every second
+  setInterval(updateTimer, 1000);
+  updateTimer();
+
+  spinBtn.addEventListener("click", async () => {
+    const user = userInput.value.trim();
+
+    if (!user) {
+      showAlert("❗ Missing Information", "Please enter a valid Discord username.");
+      return;
+    }
+
+    const isAdminTester = user === "77190";
+
+    if (isAdminTester) {
+      const code = await showPrompt("🔐 Admin Access", "Admin code required to test:");
+      if (code !== "502030") {
+        showAlert("❌ Access Denied", "Incorrect admin code.");
         return;
       }
-
-      const isAdminTester = user === "77190";
-
-      // Prevent public users from using test mode
-      if (user === "77190") {
-        const allowed = prompt("🔐 Admin code required to test. Enter code:");
-        if (allowed !== "admin123") {
-          alert("❌ Access denied.");
-          return;
-        }
-      }
-
-      const key = "lastSpin_" + user;
-      const now = Date.now();
-
-      if (!isAdminTester) {
-        const lastSpin = localStorage.getItem(key);
-        if (lastSpin && now - parseInt(lastSpin) < 86400000) {
-          alert("❌ You already spun today. Try again tomorrow!");
-          return;
-        }
-        localStorage.setItem(key, now.toString());
-      }
-
-      const won = Math.random() < 0.1;
-      const angle = Math.floor(Math.random() * 360 + 720);
-      const wheel = document.getElementById("wheel");
-      wheel.style.transform = `rotate(${angle}deg)`;
-
-      setTimeout(() => {
-        if (won) {
-          alert(`🎉 Congrats ${user}! You landed in the green and won the role!`);
-          sendWebhook(user);
-        } else {
-          alert("😢 You landed in the red. Try again tomorrow!");
-        }
-      }, 2000);
     }
 
-    function sendWebhook(username) {
-      const payload = {
-        content: `🎯 **${username}** just WON the daily spin! Let them redeem their role.`,
-        username: "WheelBot"
-      };
+    const deviceKey = getDeviceKey();
+    const cooldownKey = `dailySpin_${deviceKey}`;
+    const now = Date.now();
+    const lastSpin = localStorage.getItem(cooldownKey);
 
-      fetch(webhookURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      }).catch(err => console.error("Webhook failed", err));
+    if (!isAdminTester && lastSpin && now - parseInt(lastSpin) < 86400000) {
+      showAlert("⏳ Cooldown Active", "You already spun today on this device. Try again tomorrow!");
+      return;
     }
-  </script>
+
+    if (!isAdminTester) {
+      localStorage.setItem(cooldownKey, now.toString());
+      updateTimer();
+    }
+
+    // Disable UI during spin
+    glow.classList.remove("glow");
+    spinBtn.disabled = true;
+    userInput.disabled = true;
+    spinBtn.textContent = "Spinning...";
+
+    // Spin angle: 3 full rotations + random 0-360deg
+    const spinAngle = 1080 + Math.floor(Math.random() * 360);
+
+    // Animate wheel
+    wheel.style.transition = "transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99)";
+    wheel.style.transform = `rotate(${spinAngle}deg)`;
+
+    // After spin ends
+    setTimeout(() => {
+      // Calculate final rotation normalized to 0-360
+      const normalized = spinAngle % 360;
+
+      // Winning slice from 171deg to 189deg (18deg total, ~5% chance)
+      const won = normalized >= 171 && normalized <= 189;
+
+      // Admin tester override for infinite wins:
+      if (isAdminTester) {
+        won = true;
+      }
+
+      if (won) {
+        glow.classList.add("glow");
+        wins++;
+        winCountElem.textContent = wins;
+        localStorage.setItem("winCount", wins);
+
+        showAlert(
+          "🎉 Congratulations!", 
+          `You won the Discord role! Check your Discord to redeem.`
+        );
+
+        sendWebhook(user, true);
+      } else {
+        losses++;
+        lossCountElem.textContent = losses;
+        localStorage.setItem("lossCount", losses);
+
+        showAlert(
+          "😞 Better Luck Next Time", 
+          `The wheel didn't land in the winning zone this time. Try again tomorrow!`
+        );
+
+        sendWebhook(user, false);
+      }
+
+      // Re-enable UI
+      spinBtn.disabled = false;
+      userInput.disabled = false;
+      spinBtn.textContent = "Spin the Wheel";
+    }, 3200);
+  });
+
+  // Send Discord webhook notification
+  function sendWebhook(username, didWin) {
+    const content = didWin
+      ? `🎉 **${username}** won the daily Discord role! They should redeem it ASAP.`
+      : `😞 **${username}** spun but did not win today.`;
+
+    fetch(webhookURL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        content,
+        embeds: didWin ? [{
+          title: "New Winner!",
+          description: `${username} just won the daily spin!`,
+          color: 0xf5cb5c,
+          timestamp: new Date().toISOString()
+        }] : []
+      }),
+    }).catch((e) => {
+      console.error("Webhook failed", e);
+    });
+  }
+
+  // Add confetti effect for wins (optional)
+  function showConfetti() {
+    const confettiSettings = { 
+      target: 'confetti-canvas',
+      max: 150,
+      size: 1.5,
+      animate: true,
+      props: ['circle', 'square', 'triangle', 'line'],
+      colors: [[255,203,92], [207,219,213], [232,237,223]],
+      clock: 25,
+      rotate: true,
+      start_from_edge: true,
+      respawn: true
+    };
+    
+    const confetti = new ConfettiGenerator(confettiSettings);
+    confetti.render();
+    setTimeout(() => confetti.clear(), 5000);
+  }
+</script>
+
+<!-- Optional: Add confetti library for win effects -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script> -->
+<!-- <canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;pointer-events:none;"></canvas> -->
+
 </body>
 </html>
