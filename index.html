@@ -1,14 +1,819 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Wvixers Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WVixer's Gambling Wheel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c0c14 0%, #1a1a2e 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #8a2be2, #9370db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            color: #d8d8d8;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+        
+        .wheel-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            margin: 20px auto 30px;
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                #8a2be2 0deg 45deg, 
+                #9370db 45deg 90deg, 
+                #7b68ee 90deg 135deg, 
+                #6a5acd 135deg 180deg,
+                #483d8b 180deg 225deg,
+                #4b0082 225deg 270deg,
+                #663399 270deg 315deg,
+                #800080 315deg 360deg
+            );
+            position: relative;
+            transition: transform 4s cubic-bezier(0.1, 0.1, 0.1, 1);
+            transform: rotate(0deg);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 8px solid #2c2f33;
+        }
+        
+        .wheel-inner {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #2c2f33;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            border: 2px solid #8a2be2;
+        }
+        
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 40px;
+            background: #8a2be2;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            z-index: 3;
+        }
+        
+        .spin-button {
+            background: linear-gradient(90deg, #8a2be2, #6a5acd);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        
+        .spin-button:hover {
+            background: linear-gradient(90deg, #7930c2, #5a4cb0);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(138, 43, 226, 0.3);
+        }
+        
+        .spin-button:disabled {
+            background: #4a5072;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .user-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        input {
+            padding: 12px 20px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 1px solid #4a4a4a;
+        }
+        
+        input:focus {
+            outline: 2px solid #8a2be2;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .points-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #4a4a4a;
+        }
+        
+        .points-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #9370db;
+        }
+        
+        .points-display {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #8a2be2;
+        }
+        
+        .redeem-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #8a2be2;
+        }
+        
+        .redeem-button {
+            background: #8a2be2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .redeem-button:hover {
+            background: #7930c2;
+            transform: translateY(-2px);
+        }
+        
+        .redeem-button:disabled {
+            background: #4a4a4a;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .cooldown {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #4a4a4a;
+        }
+        
+        .history {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #4a4a4a;
+        }
+        
+        .history h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #9370db;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #8a2be2;
+        }
+        
+        .result {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a2e;
+            padding: 30px 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
+            border: 1px solid #8a2be2;
+        }
+        
+        .result.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .result h2 {
+            color: #9370db;
+            margin-bottom: 20px;
+        }
+        
+        .result-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .webhook-status {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #9370db;
+            text-align: center;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .points-section {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .wheel-container {
+                width: 280px;
+                height: 280px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1><c>Hello, you’ve reached the Wvixers website</c></h1>
-  <h2><C>Unfortunately, Wvixer demoted the website maker :(</h2></c>
-  <h1><C>If he doesn't fix the roles for everyone...</h1></c>
-  <h2><C>The website will be down.</h2></c>
-  <c><img src="Screenshot_2025-08-06_183134.png" alt="Screenshot"></c>
+    <div class="container">
+        <header>
+            <h1>WVixer's Gambling Wheel</h1>
+            <p class="subtitle">Spin the wheel, earn points, and redeem rewards!</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="wheel-section">
+                <div class="wheel-container">
+                    <div class="pointer"></div>
+                    <div class="wheel" id="wheel"></div>
+                    <div class="wheel-inner">SPIN</div>
+                </div>
+                
+                <div class="user-input">
+                    <input type="text" id="usernameInput" placeholder="Enter your Discord username#0000">
+                    <button class="spin-button" id="spinButton">SPIN WHEEL</button>
+                    <div class="webhook-status" id="webhookStatus">Webhook notifications enabled</div>
+                </div>
+                
+                <div class="cooldown" id="cooldownDisplay">
+                    Next spin available in: <span id="cooldownTimer">00:00:00</span>
+                </div>
+            </div>
+            
+            <div class="points-section">
+                <h2>Your Points & Rewards</h2>
+                
+                <div class="points-display">
+                    <span>Available Points:</span>
+                    <span id="availablePoints">0</span>
+                </div>
+                
+                <div class="redeem-item">
+                    <div>
+                        <div>Gambler Role</div>
+                        <div class="price">3,000 points</div>
+                    </div>
+                    <button class="redeem-button" id="redeemGambler" disabled>REDEEM</button>
+                </div>
+                
+                <div class="redeem-item">
+                    <div>
+                        <div>VIP 1 Role</div>
+                        <div class="price">5,000 points</div>
+                    </div>
+                    <button class="redeem-button" id="redeemVip1" disabled>REDEEM</button>
+                </div>
+                
+                <div class="redeem-item">
+                    <div>
+                        <div>VIP 2 Role</div>
+                        <div class="price">8,000 points</div>
+                    </div>
+                    <button class="redeem-button" id="redeemVip2" disabled>REDEEM</button>
+                </div>
+                
+                <div class="redeem-item">
+                    <div>
+                        <div>Custom Title</div>
+                        <div class="price">10,000 points</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="history">
+            <h2>Spin History</h2>
+            <div id="historyList"></div>
+        </div>
+    </div>
+    
+    <div class="result" id="resultPopup">
+        <button class="result-close" id="closeResult">&times;</button>
+        <h2>Congratulations!</h2>
+        <p>You won: <span id="prizeText"></span></p>
+        <p>Username: <span id="userText"></span></p>
+        <p>Points added to your account!</p>
+        <p id="discordNotificationStatus">Sending notification to Discord...</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const wheel = document.getElementById('wheel');
+            const spinButton = document.getElementById('spinButton');
+            const usernameInput = document.getElementById('usernameInput');
+            const cooldownDisplay = document.getElementById('cooldownDisplay');
+            const cooldownTimer = document.getElementById('cooldownTimer');
+            const historyList = document.getElementById('historyList');
+            const resultPopup = document.getElementById('resultPopup');
+            const prizeText = document.getElementById('prizeText');
+            const userText = document.getElementById('userText');
+            const closeResult = document.getElementById('closeResult');
+            const discordNotificationStatus = document.getElementById('discordNotificationStatus');
+            const webhookStatus = document.getElementById('webhookStatus');
+            const availablePointsEl = document.getElementById('availablePoints');
+            const redeemGamblerBtn = document.getElementById('redeemGambler');
+            const redeemVip1Btn = document.getElementById('redeemVip1');
+            const redeemVip2Btn = document.getElementById('redeemVip2');
+            const redeemTitleBtn = document.getElementById('redeemTitle');
+            
+            // Wheel segments with prizes
+            const segments = [
+                { name: "1,500 Points", color: "#8a2be2", value: 1500 },
+                { name: "800 Points", color: "#9370db", value: 800 },
+                { name: "500 Points", color: "#7b68ee", value: 500 },
+                { name: "1,200 Points", color: "#6a5acd", value: 1200 },
+                { name: "300 Points", color: "#483d8b", value: 300 },
+                { name: "2,000 Points", color: "#4b0082", value: 2000 },
+                { name: "1,000 Points", color: "#663399", value: 1000 },
+                { name: "1,500 Points", color: "#800080", value: 1500 }
+            ];
+            
+            // Rewards with point costs
+            const rewards = {
+                gambler: { name: "Gambler Role", cost: 3000 },
+                vip1: { name: "VIP 1 Role", cost: 5000 },
+                vip2: { name: "VIP 2 Role", cost: 8000 },
+                title: { name: "Custom Title", cost: 10000 }
+            };
+            
+            // Discord webhook URL
+            const WEBHOOK_URL = "https://discord.com/api/webhooks/1400912238591869058/9yiWBlL47_UqFgxSrG1qZWMCq-_C7GGficCbEXRg8qAzsAMJ-bKKKX6nN1jWe1u02iiW";
+            
+            // User data and cooldown
+            let userData = {};
+            let isSpinning = false;
+            
+            // Initialize the page
+            function init() {
+                loadUserData();
+                updateCooldownDisplay();
+                updatePointsDisplay();
+                setupEventListeners();
+                
+                // Check webhook connection
+                checkWebhookConnection();
+            }
+            
+            // Check if webhook is reachable
+            async function checkWebhookConnection() {
+                try {
+                    const response = await fetch(WEBHOOK_URL, {
+                        method: 'HEAD'
+                    });
+                    
+                    if (response.status === 200) {
+                        webhookStatus.textContent = "Webhook notifications enabled";
+                        webhookStatus.style.color = "#6a5acd";
+                    } else {
+                        webhookStatus.textContent = "Webhook connection issue - notifications may not work";
+                        webhookStatus.style.color = "#ff6b6b";
+                    }
+                } catch (error) {
+                    webhookStatus.textContent = "Webhook connection failed - notifications disabled";
+                    webhookStatus.style.color = "#ff6b6b";
+                    console.error("Webhook connection error:", error);
+                }
+            }
+            
+            // Set up event listeners
+            function setupEventListeners() {
+                spinButton.addEventListener('click', startSpin);
+                closeResult.addEventListener('click', () => {
+                    resultPopup.classList.remove('show');
+                });
+                redeemGamblerBtn.addEventListener('click', () => redeemReward('gambler'));
+                redeemVip1Btn.addEventListener('click', () => redeemReward('vip1'));
+                redeemVip2Btn.addEventListener('click', () => redeemReward('vip2'));
+                redeemTitleBtn.addEventListener('click', () => redeemReward('title'));
+                
+                // Update cooldown display when username changes
+                usernameInput.addEventListener('input', updateCooldownDisplay);
+            }
+            
+            // Start the wheel spin
+            function startSpin() {
+                if (isSpinning) return;
+                
+                const username = usernameInput.value.trim();
+                if (!username) {
+                    alert("Please enter your Discord username");
+                    return;
+                }
+                
+                // Check if user is on cooldown
+                if (userData[username] && userData[username].nextSpin > Date.now()) {
+                    alert("You're on cooldown! Please wait until your next spin is available.");
+                    return;
+                }
+                
+                isSpinning = true;
+                spinButton.disabled = true;
+                
+                // Random spin rotation (multiple full rotations plus segment offset)
+                const rotations = 5 + Math.random() * 5; // 5-10 full rotations
+                const segmentAngle = 360 / segments.length;
+                const winningSegment = Math.floor(Math.random() * segments.length);
+                const extraAngle = winningSegment * segmentAngle;
+                
+                const totalRotation = rotations * 360 + extraAngle;
+                
+                // Apply the rotation with CSS transition
+                wheel.style.transform = `rotate(${totalRotation}deg)`;
+                
+                // After spin completes
+                setTimeout(() => {
+                    const prize = segments[winningSegment];
+                    showResult(prize, username);
+                    updateUserCooldown(username);
+                    addPoints(username, prize.value);
+                    saveUserData();
+                    addToHistory(username, prize);
+                    sendDiscordWebhook(username, prize);
+                    
+                    isSpinning = false;
+                    spinButton.disabled = false;
+                }, 4000); // Match the CSS transition time
+            }
+            
+            // Show the result popup
+            function showResult(prize, username) {
+                prizeText.textContent = prize.name;
+                userText.textContent = username;
+                discordNotificationStatus.textContent = "Sending notification to Discord...";
+                resultPopup.classList.add('show');
+            }
+            
+            // Update user cooldown (24 hours from now)
+            function updateUserCooldown(username) {
+                if (!userData[username]) {
+                    userData[username] = { points: 0 };
+                }
+                
+                userData[username].nextSpin = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+                updateCooldownDisplay();
+            }
+            
+            // Add points to user account
+            function addPoints(username, points) {
+                if (!userData[username]) {
+                    userData[username] = { points: 0 };
+                }
+                
+                userData[username].points += points;
+                updatePointsDisplay();
+            }
+            
+            // Redeem a specific reward
+            function redeemReward(rewardType) {
+                const username = usernameInput.value.trim();
+                if (!username || !userData[username]) {
+                    alert("Please enter your username and earn points first");
+                    return;
+                }
+                
+                const reward = rewards[rewardType];
+                const userPoints = userData[username].points;
+                
+                if (userPoints < reward.cost) {
+                    alert(`You need ${reward.cost.toLocaleString()} points to redeem ${reward.name}. You have ${userPoints.toLocaleString()} points.`);
+                    return;
+                }
+                
+                // Deduct points
+                userData[username].points -= reward.cost;
+                
+                // Send Discord notification
+                sendRedeemWebhook(username, reward.name, reward.cost);
+                
+                // Update UI
+                updatePointsDisplay();
+                saveUserData();
+                
+                // Show success message
+                alert(`Successfully redeemed ${reward.name}!`);
+            }
+            
+            // Update the points display and redeem buttons
+            function updatePointsDisplay() {
+                const username = usernameInput.value.trim();
+                
+                if (username && userData[username]) {
+                    const points = userData[username].points;
+                    availablePointsEl.textContent = points.toLocaleString();
+                    
+                    // Update redeem buttons
+                    redeemGamblerBtn.disabled = points < rewards.gambler.cost;
+                    redeemVip1Btn.disabled = points < rewards.vip1.cost;
+                    redeemVip2Btn.disabled = points < rewards.vip2.cost;
+                    redeemTitleBtn.disabled = points < rewards.title.cost;
+                } else {
+                    availablePointsEl.textContent = "0";
+                    redeemGamblerBtn.disabled = true;
+                    redeemVip1Btn.disabled = true;
+                    redeemVip2Btn.disabled = true;
+                    redeemTitleBtn.disabled = true;
+                }
+            }
+            
+            // Update the cooldown display
+            function updateCooldownDisplay() {
+                const username = usernameInput.value.trim();
+                
+                if (username && userData[username] && userData[username].nextSpin > Date.now()) {
+                    cooldownDisplay.style.display = 'block';
+                    
+                    // Update countdown every second
+                    const countdownInterval = setInterval(() => {
+                        const now = Date.now();
+                        const timeLeft = userData[username].nextSpin - now;
+                        
+                        if (timeLeft <= 0) {
+                            clearInterval(countdownInterval);
+                            cooldownDisplay.style.display = 'none';
+                            return;
+                        }
+                        
+                        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                        
+                        cooldownTimer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    }, 1000);
+                } else {
+                    cooldownDisplay.style.display = 'none';
+                }
+            }
+            
+            // Add spin to history
+            function addToHistory(username, prize) {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                const date = new Date().toLocaleDateString();
+                historyItem.innerHTML = `
+                    <span>${username}</span>
+                    <span>${prize.name}</span>
+                    <span>${date}</span>
+                `;
+                
+                historyList.prepend(historyItem);
+                
+                // Limit history to 10 items
+                if (historyList.children.length > 10) {
+                    historyList.removeChild(historyList.lastChild);
+                }
+            }
+            
+            // Send Discord webhook notification for spin
+            async function sendDiscordWebhook(username, prize) {
+                try {
+                    const messageContent = `🎉 **${username}** just won **${prize.name}** on WVixer's Gambling Wheel!`;
+                    
+                    const payload = {
+                        content: messageContent,
+                        embeds: [
+                            {
+                                title: "WVixer's Gambling Wheel Result",
+                                color: parseInt(prize.color.replace('#', ''), 16),
+                                fields: [
+                                    {
+                                        name: "Username",
+                                        value: username,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "Prize",
+                                        value: prize.name,
+                                        inline: true
+                                    }
+                                ],
+                                timestamp: new Date().toISOString(),
+                                footer: {
+                                    text: "WVixer's Gambling Wheel"
+                                }
+                            }
+                        ]
+                    };
+                    
+                    const response = await fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (response.ok) {
+                        discordNotificationStatus.textContent = "Notification sent to Discord successfully!";
+                    } else {
+                        discordNotificationStatus.textContent = "Failed to send Discord notification";
+                    }
+                } catch (error) {
+                    console.error("Webhook error:", error);
+                    discordNotificationStatus.textContent = "Error sending Discord notification";
+                }
+            }
+            
+            // Send Discord webhook notification for redemption
+            async function sendRedeemWebhook(username, redeemedItem, cost) {
+                try {
+                    const messageContent = `🎊 **${username}** just redeemed **${redeemedItem}** for ${cost.toLocaleString()} points on WVixer's Gambling Wheel!`;
+                    
+                    const payload = {
+                        content: messageContent,
+                        embeds: [
+                            {
+                                title: "Reward Redemption",
+                                color: 0x8a2be2,
+                                fields: [
+                                    {
+                                        name: "Username",
+                                        value: username,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "Redeemed Item",
+                                        value: redeemedItem,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "Points Cost",
+                                        value: cost.toLocaleString(),
+                                        inline: true
+                                    }
+                                ],
+                                timestamp: new Date().toISOString(),
+                                footer: {
+                                    text: "WVixer's Gambling Wheel"
+                                }
+                            }
+                        ]
+                    };
+                    
+                    const response = await fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        console.error("Failed to send redemption webhook");
+                    }
+                } catch (error) {
+                    console.error("Redemption webhook error:", error);
+                }
+            }
+            
+            // Load user data from localStorage
+            function loadUserData() {
+                const savedData = localStorage.getItem('wheelUserData');
+                if (savedData) {
+                    userData = JSON.parse(savedData);
+                }
+            }
+            
+            // Save user data to localStorage
+            function saveUserData() {
+                localStorage.setItem('wheelUserData', JSON.stringify(userData));
+            }
+            
+            // Initialize the application
+            init();
+        });
+    </script>
 </body>
 </html>
-
