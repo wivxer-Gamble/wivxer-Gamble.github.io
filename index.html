@@ -214,6 +214,12 @@
             border-left: 3px solid #fff;
         }
         
+        .price {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+        
         .redeem-button {
             background: #fff;
             color: #000;
@@ -417,6 +423,14 @@
                 
                 <div class="redeem-item">
                     <div>
+                        <div>Pro Gambler Role</div>
+                        <div class="price">6,000 points</div>
+                    </div>
+                    <button class="redeem-button" id="redeemProGambler" disabled>REDEEM</button>
+                </div>
+                
+                <div class="redeem-item">
+                    <div>
                         <div>VIP 1 Role</div>
                         <div class="price">5,000 points</div>
                     </div>
@@ -430,7 +444,13 @@
                     </div>
                     <button class="redeem-button" id="redeemVip2" disabled>REDEEM</button>
                 </div>
+                
                 <div class="redeem-item">
+                    <div>
+                        <div>Insane Gambler Role</div>
+                        <div class="price">25,000 points</div>
+                    </div>
+                    <button class="redeem-button" id="redeemInsaneGambler" disabled>REDEEM</button>
                 </div>
             </div>
         </div>
@@ -473,9 +493,10 @@
             const webhookStatus = document.getElementById('webhookStatus');
             const availablePointsEl = document.getElementById('availablePoints');
             const redeemGamblerBtn = document.getElementById('redeemGambler');
+            const redeemProGamblerBtn = document.getElementById('redeemProGambler');
             const redeemVip1Btn = document.getElementById('redeemVip1');
             const redeemVip2Btn = document.getElementById('redeemVip2');
-            const redeemTitleBtn = document.getElementById('redeemTitle');
+            const redeemInsaneGamblerBtn = document.getElementById('redeemInsaneGambler');
             const accessMessage = document.getElementById('accessMessage');
             const accessTimer = document.getElementById('accessTimer');
             
@@ -494,9 +515,10 @@
             // Rewards with point costs
             const rewards = {
                 gambler: { name: "Gambler Role", cost: 3000 },
+                proGambler: { name: "Pro Gambler Role", cost: 6000 },
                 vip1: { name: "VIP 1 Role", cost: 5000 },
                 vip2: { name: "VIP 2 Role", cost: 8000 },
-                title: { name: "Custom Title", cost: 10000 }
+                insaneGambler: { name: "Insane Gambler Role", cost: 25000 }
             };
             
             // Discord webhook URL
@@ -599,9 +621,10 @@
                     resultPopup.classList.remove('show');
                 });
                 redeemGamblerBtn.addEventListener('click', () => redeemReward('gambler'));
+                redeemProGamblerBtn.addEventListener('click', () => redeemReward('proGambler'));
                 redeemVip1Btn.addEventListener('click', () => redeemReward('vip1'));
                 redeemVip2Btn.addEventListener('click', () => redeemReward('vip2'));
-                redeemTitleBtn.addEventListener('click', () => redeemReward('title'));
+                redeemInsaneGamblerBtn.addEventListener('click', () => redeemReward('insaneGambler'));
                 
                 // Update cooldown display when username changes
                 usernameInput.addEventListener('input', updateCooldownDisplay);
@@ -720,15 +743,17 @@
                     
                     // Update redeem buttons
                     redeemGamblerBtn.disabled = points < rewards.gambler.cost;
+                    redeemProGamblerBtn.disabled = points < rewards.proGambler.cost;
                     redeemVip1Btn.disabled = points < rewards.vip1.cost;
                     redeemVip2Btn.disabled = points < rewards.vip2.cost;
-                    redeemTitleBtn.disabled = points < rewards.title.cost;
+                    redeemInsaneGamblerBtn.disabled = points < rewards.insaneGambler.cost;
                 } else {
                     availablePointsEl.textContent = "0";
                     redeemGamblerBtn.disabled = true;
+                    redeemProGamblerBtn.disabled = true;
                     redeemVip1Btn.disabled = true;
                     redeemVip2Btn.disabled = true;
-                    redeemTitleBtn.disabled = true;
+                    redeemInsaneGamblerBtn.disabled = true;
                 }
             }
             
@@ -902,4 +927,3 @@
     </script>
 </body>
 </html>
-
