@@ -14,7 +14,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #0c0c14 0%, #1a1a2e 100%);
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
             color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
@@ -42,9 +42,8 @@
         h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
-            background: linear-gradient(90deg, #8a2be2, #9370db);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
         
         .subtitle {
@@ -80,19 +79,19 @@
             height: 100%;
             border-radius: 50%;
             background: conic-gradient(
-                #8a2be2 0deg 45deg, 
-                #9370db 45deg 90deg, 
-                #7b68ee 90deg 135deg, 
-                #6a5acd 135deg 180deg,
-                #483d8b 180deg 225deg,
-                #4b0082 225deg 270deg,
-                #663399 270deg 315deg,
-                #800080 315deg 360deg
+                #333333 0deg 45deg, 
+                #555555 45deg 90deg, 
+                #777777 90deg 135deg, 
+                #999999 135deg 180deg,
+                #bbbbbb 180deg 225deg,
+                #dddddd 225deg 270deg,
+                #ffffff 270deg 315deg,
+                #888888 315deg 360deg
             );
             position: relative;
             transition: transform 4s cubic-bezier(0.1, 0.1, 0.1, 1);
             transform: rotate(0deg);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
             border: 8px solid #2c2f33;
         }
         
@@ -100,7 +99,7 @@
             position: absolute;
             width: 60px;
             height: 60px;
-            background: #2c2f33;
+            background: #000;
             border-radius: 50%;
             top: 50%;
             left: 50%;
@@ -111,7 +110,7 @@
             justify-content: center;
             color: white;
             font-weight: bold;
-            border: 2px solid #8a2be2;
+            border: 2px solid #fff;
         }
         
         .pointer {
@@ -121,14 +120,14 @@
             transform: translateX(-50%);
             width: 20px;
             height: 40px;
-            background: #8a2be2;
+            background: #fff;
             clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
             z-index: 3;
         }
         
         .spin-button {
-            background: linear-gradient(90deg, #8a2be2, #6a5acd);
-            color: white;
+            background: #fff;
+            color: #000;
             border: none;
             padding: 14px 40px;
             font-size: 1.1rem;
@@ -140,13 +139,13 @@
         }
         
         .spin-button:hover {
-            background: linear-gradient(90deg, #7930c2, #5a4cb0);
+            background: #e6e6e6;
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(138, 43, 226, 0.3);
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
         }
         
         .spin-button:disabled {
-            background: #4a5072;
+            background: #666;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
@@ -175,7 +174,7 @@
         }
         
         input:focus {
-            outline: 2px solid #8a2be2;
+            outline: 2px solid #fff;
             background: rgba(255, 255, 255, 0.15);
         }
         
@@ -191,7 +190,7 @@
         .points-section h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: #9370db;
+            color: #fff;
         }
         
         .points-display {
@@ -201,7 +200,7 @@
             padding: 12px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            border-left: 3px solid #8a2be2;
+            border-left: 3px solid #fff;
         }
         
         .redeem-item {
@@ -212,12 +211,12 @@
             padding: 12px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            border-left: 3px solid #8a2be2;
+            border-left: 3px solid #fff;
         }
         
         .redeem-button {
-            background: #8a2be2;
-            color: white;
+            background: #fff;
+            color: #000;
             border: none;
             padding: 8px 16px;
             font-size: 0.9rem;
@@ -228,12 +227,12 @@
         }
         
         .redeem-button:hover {
-            background: #7930c2;
+            background: #e6e6e6;
             transform: translateY(-2px);
         }
         
         .redeem-button:disabled {
-            background: #4a4a4a;
+            background: #666;
             cursor: not-allowed;
             transform: none;
         }
@@ -261,7 +260,7 @@
         .history h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: #9370db;
+            color: #fff;
         }
         
         .history-item {
@@ -271,7 +270,7 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             margin-bottom: 10px;
-            border-left: 3px solid #8a2be2;
+            border-left: 3px solid #fff;
         }
         
         .result {
@@ -279,14 +278,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #1a1a2e;
+            background: #1a1a1a;
             padding: 30px 40px;
             border-radius: 12px;
             text-align: center;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
             z-index: 100;
             display: none;
-            border: 1px solid #8a2be2;
+            border: 1px solid #fff;
         }
         
         .result.show {
@@ -300,7 +299,7 @@
         }
         
         .result h2 {
-            color: #9370db;
+            color: #fff;
             margin-bottom: 20px;
         }
         
@@ -318,8 +317,37 @@
         .webhook-status {
             margin-top: 10px;
             font-size: 0.9rem;
-            color: #9370db;
+            color: #fff;
             text-align: center;
+        }
+        
+        .access-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border: 1px solid #fff;
+            display: none;
+        }
+        
+        .access-message.show {
+            display: block;
+        }
+        
+        .access-message h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        
+        .access-message p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
         }
         
         @media (max-width: 900px) {
@@ -408,6 +436,7 @@
                         <div>Custom Title</div>
                         <div class="price">10,000 points</div>
                     </div>
+                    <button class="redeem-button" id="redeemTitle" disabled>REDEEM</button>
                 </div>
             </div>
         </div>
@@ -425,6 +454,12 @@
         <p>Username: <span id="userText"></span></p>
         <p>Points added to your account!</p>
         <p id="discordNotificationStatus">Sending notification to Discord...</p>
+    </div>
+    
+    <div class="access-message" id="accessMessage">
+        <h2>Access Restricted</h2>
+        <p>You can only access this site once every 24 hours.</p>
+        <p>Next access available in: <span id="accessTimer">00:00:00</span></p>
     </div>
 
     <script>
@@ -447,17 +482,19 @@
             const redeemVip1Btn = document.getElementById('redeemVip1');
             const redeemVip2Btn = document.getElementById('redeemVip2');
             const redeemTitleBtn = document.getElementById('redeemTitle');
+            const accessMessage = document.getElementById('accessMessage');
+            const accessTimer = document.getElementById('accessTimer');
             
             // Wheel segments with prizes
             const segments = [
-                { name: "1,500 Points", color: "#8a2be2", value: 1500 },
-                { name: "800 Points", color: "#9370db", value: 800 },
-                { name: "500 Points", color: "#7b68ee", value: 500 },
-                { name: "1,200 Points", color: "#6a5acd", value: 1200 },
-                { name: "300 Points", color: "#483d8b", value: 300 },
-                { name: "2,000 Points", color: "#4b0082", value: 2000 },
-                { name: "1,000 Points", color: "#663399", value: 1000 },
-                { name: "1,500 Points", color: "#800080", value: 1500 }
+                { name: "1,500 Points", color: "#333333", value: 1500 },
+                { name: "800 Points", color: "#555555", value: 800 },
+                { name: "500 Points", color: "#777777", value: 500 },
+                { name: "1,200 Points", color: "#999999", value: 1200 },
+                { name: "300 Points", color: "#bbbbbb", value: 300 },
+                { name: "2,000 Points", color: "#dddddd", value: 2000 },
+                { name: "1,000 Points", color: "#ffffff", value: 1000 },
+                { name: "1,500 Points", color: "#888888", value: 1500 }
             ];
             
             // Rewards with point costs
@@ -477,6 +514,15 @@
             
             // Initialize the page
             function init() {
+                // Check if user has accessed the site in the last 24 hours
+                if (hasRecentAccess()) {
+                    showAccessMessage();
+                    return;
+                }
+                
+                // Record this access
+                recordAccess();
+                
                 loadUserData();
                 updateCooldownDisplay();
                 updatePointsDisplay();
@@ -484,6 +530,51 @@
                 
                 // Check webhook connection
                 checkWebhookConnection();
+            }
+            
+            // Check if user has accessed the site in the last 24 hours
+            function hasRecentAccess() {
+                const lastAccess = localStorage.getItem('lastAccess');
+                if (!lastAccess) return false;
+                
+                const lastAccessTime = parseInt(lastAccess);
+                const currentTime = Date.now();
+                const twentyFourHours = 24 * 60 * 60 * 1000;
+                
+                return (currentTime - lastAccessTime) < twentyFourHours;
+            }
+            
+            // Record the current access time
+            function recordAccess() {
+                localStorage.setItem('lastAccess', Date.now().toString());
+            }
+            
+            // Show access restriction message
+            function showAccessMessage() {
+                accessMessage.classList.add('show');
+                
+                const lastAccess = parseInt(localStorage.getItem('lastAccess'));
+                const nextAccessTime = lastAccess + (24 * 60 * 60 * 1000);
+                
+                // Update countdown every second
+                const countdownInterval = setInterval(() => {
+                    const now = Date.now();
+                    const timeLeft = nextAccessTime - now;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(countdownInterval);
+                        accessMessage.classList.remove('show');
+                        recordAccess();
+                        init();
+                        return;
+                    }
+                    
+                    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    
+                    accessTimer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }, 1000);
             }
             
             // Check if webhook is reachable
@@ -495,7 +586,7 @@
                     
                     if (response.status === 200) {
                         webhookStatus.textContent = "Webhook notifications enabled";
-                        webhookStatus.style.color = "#6a5acd";
+                        webhookStatus.style.color = "#fff";
                     } else {
                         webhookStatus.textContent = "Webhook connection issue - notifications may not work";
                         webhookStatus.style.color = "#ff6b6b";
@@ -706,7 +797,7 @@
                         embeds: [
                             {
                                 title: "WVixer's Gambling Wheel Result",
-                                color: parseInt(prize.color.replace('#', ''), 16),
+                                color: 0x000000,
                                 fields: [
                                     {
                                         name: "Username",
@@ -756,7 +847,7 @@
                         embeds: [
                             {
                                 title: "Reward Redemption",
-                                color: 0x8a2be2,
+                                color: 0xFFFFFF,
                                 fields: [
                                     {
                                         name: "Username",
